@@ -1,0 +1,32 @@
+建立linaro启动sd。
+分区1：vfat格式，包括
+               BOOT.bin （来自digilent参考设计。该文件配置了PS、PL）
+               zImage （编译。source来自digilent-xilinx-master）
+               devicetree.dtb （编译。同上）
+分区2：ext4格式，linaro的FS
+
+pdf文件讲述比较详细，包括sd分区，文件系统下载，zImage和devicetree的编译。
+
+
+用git下载digilent-linux非常慢，并屡次中断，可以从此处：
+  https://github.com/Digilent/linux-digilent
+下载zip包，zip包是git的主分支，不包括其他分支和版本更新，比较小。用迅雷下也很快。
+
+使用menuconfig需要安装lib
+#apt-get install libncurses5-dev
+
+编译devicetree会遇到bug
+========================================================================================================
+BUG
+========================================================================================================
+In file included from include/drm/drmP.h:75:0,
+                 from drivers/gpu/drm/drm_auth.c:36:
+/home/picorel/Desktop/ORACLE/framework/my_kernel_tree/include/uapi/drm/drm.h:47:24: fatal error: sys/ioccom.h: No such file or directory
+ 
+SOLUTION:
+ 
+vim include/uapi/drm/drm.h
+ 
+--#if defined(__linux__)
+++#if defined(__KERNEL__) || defined(__linux__)
+=================================================================================
